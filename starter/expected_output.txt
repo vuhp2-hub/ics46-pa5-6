@@ -1,0 +1,46 @@
+# expected_output.txt -- what the provided driver prints when every TODO is finished correctly:
+#
+#     g++ -std=c++20 -Wall -Wextra -o driver driver.cpp && ./driver samples/menu3
+#
+# Compare your run against the lines below the marker. Two caveats:
+#   - The two "spread" lines depend on YOUR hash, so your numbers may differ. Strong spread
+#     (a small biggest bucket, most keys alone) is what Part 1 asks for.
+#   - "table lookups spent by the swaps" and the final "counters:" line measure how much WORK your
+#     design spends, so your numbers can differ. The reference spends 5 swap lookups here; far more
+#     usually means alterDish re-reads tables the swap could not have touched.
+# Everything else -- the lookups, the tables by course, every score, the best meals, and the
+# settling order -- should match exactly.
+# ----- driver output begins below this line -----
+menu: 3 courses, 3 pairing tables, 1 chosen course(s)
+
+name maps and their spread:
+  course-name map: 3 keys in 5 buckets, biggest bucket 1, keys alone 100%
+  Appetizer dish map: 3 keys in 5 buckets, biggest bucket 1, keys alone 100%
+
+lookups:
+  courseIndexOf("Main") = 1
+  dishIndexOf(courseIndexOf("Main"), "Lentils") = 1
+  courseIndexOf("Drink") = -1   (a miss -> -1)
+
+tables by course (model.tablesWith):
+  Appetizer: table0 table1
+  Main: table1 table2
+  Dessert: table2
+
+tweak session (start = every free course at dish 0):
+  start ("Soup", "Lentils", "Cake")  score 5
+  swap "Appetizer" -> "Bread": ok  ("Bread", "Lentils", "Cake")  score 6
+  swap "Main" -> "Steak": refused  ("Bread", "Lentils", "Cake")  score 6
+  swap "Dessert" -> "Fruit": ok  ("Bread", "Lentils", "Fruit")  score 18
+  swap "Appetizer" -> "Soup": ok  ("Soup", "Lentils", "Fruit")  score 15
+  (self-check: full rescore of the final meal = 15)
+  table lookups spent by the swaps: 5 on top of the 3 that filled the cache
+
+best meals (K = 3):
+  ("Salad", "Lentils", "Fruit")  score 36
+  ("Bread", "Lentils", "Fruit")  score 18
+  ("Soup", "Lentils", "Fruit")  score 15
+
+settling order: Appetizer Main Dessert 
+
+counters: tableTouchCount=38  mealBuildCount=17  entryCompareCount=15  scoreCallCount=10

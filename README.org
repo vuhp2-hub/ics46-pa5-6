@@ -1,0 +1,6 @@
+#+title: Readme
+* Credits
+- Course: ICS 46 @ UCI
+- Instructor: Pezeshki Bobak
+* Programming Assignment Prompt
+- Instructions
