@@ -35,8 +35,8 @@
           # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
           packages.default = pkgs.stdenv.mkDerivation {
             pname = "pa5-6";
-            version = "1.0.0";
-            src = ./starter;
+            version = "unstable";
+            src = ./.;
             nativeBuildInputs = with pkgs; [
               cmake
               pkg-config
