@@ -17,3 +17,35 @@
 - [ ] Implementation
 ** Submission: 2-3 Days
 - [ ] Revisions + Troubleshooting
+* Implementation Journal (QnA)
+** Part 1
+*** What is the overall goal?
+The starter code [[file:starter/driver.cpp][driver.cpp]] compiles. It fails on larger name lists. This means that
+the hash collision avoidance isn't implemented or is currently done very poorly.
+*** What are the components to create the hash map?
+1. NameHasher - Assumed to provide the index. Hash chaining fails. Only open-addressing would work.
+2. NameMap - Assumed to be the wrapper of [[https://en.cppreference.com/cpp/container/unordered_map][std::unordered_map]] with NameHasher as the hasher.
+*** Components - What's needed to be implemented mechanically?
+**** NameHasher
+1. static hashCode(std::string const&) - generates hash code from string
+2. operator() - called by the map on every key
+*** Testing - What are some things that needs to be tested? How?
+**** NameHasher
+***** Size
+Must be trivially copiable at most 32 bytes.
+***** Look Up O(1)
+Try using [[https://google.github.io/benchmark/user_guide.html][Google Benchmark]] for complexity testing. Definitely overkill but it would be fun.
+*** Missing Knowledge List
+**** TODO Scaling Before Adding
+Described as a technique for hashing strings that eliminates collision for strings that have
+the same characters.
+#+BEGIN_QUOTE
+Turning a name into a number. The codes we built in class walk the key one character at a time,
+keeping a running value: scale what you have so far by a constant, add the next character, and carry
+on. Scaling before adding is what makes the order of the characters matter, so "TAB" and "BAT" do
+not land on the same value. Menus are full of names that differ only slightly (a long shared prefix or
+suffix, one letter apart), so a code that leans on just a few characters, or that ignores their order, gets
+into trouble here.
+#+END_QUOTE
+
+Another name for this hash function is a [[https://cp-algorithms.com/string/string-hashing.html][rolling polynomial hash function]].
