@@ -6,3 +6,6 @@ tmp/
 build/
 *.cmake
 result
+CMakeCache.txt
+CMakeFiles/
+Makefile
