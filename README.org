@@ -3,4 +3,17 @@
 - Course: ICS 46 @ UCI
 - Instructor: Pezeshki Bobak
 * Programming Assignment Prompt
-- Instructions
+- [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, and Ranking Meals - Instructions.pdf][Instructions]]
+- [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, and Ranking Meals.pdf][Assignment Guide Slides]]
+* Schedule
+** Ground Zero - 1 Day
+- [ ] Project Setup: Nix Build
+- [ ] Setting up CMake + GTest
+** Part 1 - 1 Days
+- [ ] Setting up Tests
+- [ ] Implementation
+** Part 2 - 1 Days
+- [ ] Setting up Tests
+- [ ] Implementation
+** Submission: 2-3 Days
+- [ ] Revisions + Troubleshooting
