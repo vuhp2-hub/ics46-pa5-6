@@ -3,6 +3,10 @@
 *.log
 tmp/
 
+# Emacs Files
+\#*#
+.\#*
+
 build/
 *.cmake
 result
