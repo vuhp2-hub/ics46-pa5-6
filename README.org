@@ -49,3 +49,13 @@ into trouble here.
 #+END_QUOTE
 
 Another name for this hash function is a [[https://cp-algorithms.com/string/string-hashing.html][rolling polynomial hash function]].
+
+The compression function is called MAD (Multiply-Add-Divide)
+***** MAD
+MAD relies on 3 constants: positive numbers a and b, and a prime number.
+The assignment requires usage of the constants in [[file:starter/IntegerHash.hpp][IntegerHash.cpp]]
+
+MAD yields your bucket index:
+#+BEGIN_SRC cpp
+return ((a * hashCode(key) + b) % HASH_PRIME);
+#+END_SRC
