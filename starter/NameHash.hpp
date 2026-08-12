@@ -53,4 +53,4 @@ NameMap<K, V> makeNameMap(std::vector<K> const& keys, std::vector<V> const& valu
     return map;
 }
 
-#endif  // NAME_HASH_HPP
+#endif // NAME_HASH_HPP
