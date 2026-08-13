@@ -10,3 +10,7 @@ TEST(NameHasherTests, MADCompression) {
     EXPECT_EQ(NameHasher{}("TAB"), 488822844268373846ULL);
     EXPECT_EQ(NameHasher{}("BAT"), 263071454132421338ULL);
 }
+
+TEST(NameHasherTests, SpaceConstraints) {
+    EXPECT_LE(sizeof(NameHasher), 32);
+}
