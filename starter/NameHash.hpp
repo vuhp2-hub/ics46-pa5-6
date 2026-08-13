@@ -38,8 +38,7 @@ struct NameHasher {
         // I'm gonna have to implement using the "scale then add" method discussed in the slides.
         std::uint32_t h = 0;
         for (char c : key) {
-            h *= 10;
-            h += c;
+            h = h * 10 + c;
         }
         return h;
     }
@@ -51,8 +50,6 @@ struct NameHasher {
     // like in IntegerHash.
     std::size_t operator()(std::string const& key) const {
         std::uint32_t code = hashCode(key);
-        std::size_t resultMAD =
-            static_cast<std::size_t>((mulmod(IntegerHasher::a, code, HASH_PRIME) + IntegerHasher::b) % HASH_PRIME);
         return static_cast<std::size_t>((mulmod(IntegerHasher::a, code, HASH_PRIME) + IntegerHasher::b) % HASH_PRIME);
     }
 };
