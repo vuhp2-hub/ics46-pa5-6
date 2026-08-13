@@ -38,7 +38,8 @@ struct NameHasher {
         // I'm gonna have to implement using the "scale then add" method discussed in the slides.
         std::uint32_t h = 0;
         for (char c : key) {
-            h += (h * 10 + c);
+            h *= 10;
+            h += c;
         }
         return h;
     }
