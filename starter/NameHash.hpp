@@ -28,11 +28,11 @@ struct NameHasher {
 
     // Step 1. Turn a name into a number.
     static std::uint32_t hashCode(std::string const& key) {
-        // TODO: Change hashCode string implementation
+        // DONE: Change hashCode string implementation
         // Saving the original for furture studying:
         /*
-            std::uint32_t h = 0;
-            for (char c : key) h += static_cast<std::uint32_t>(c);
+          std::uint32_t h = 0;
+          for (char c : key) h += static_cast<std::uint32_t>(c);
          */
 
         // I'm gonna have to implement using the "scale then add" method discussed in the slides.
@@ -46,7 +46,15 @@ struct NameHasher {
 
     // Step 2. Compression. The map does this for you: it takes whatever operator() returns and
     // reduces it with % bucket_count() to pick the bucket.
-    std::size_t operator()(std::string const& key) const { return hashCode(key); }
+
+    // TODO: change the default compression algorithm to use the MAD compression function
+    // like in IntegerHash.
+    std::size_t operator()(std::string const& key) const {
+        std::uint32_t code = hashCode(key);
+        std::size_t resultMAD =
+            static_cast<std::size_t>((mulmod(IntegerHasher::a, code, HASH_PRIME) + IntegerHasher::b) % HASH_PRIME);
+        return static_cast<std::size_t>((mulmod(IntegerHasher::a, code, HASH_PRIME) + IntegerHasher::b) % HASH_PRIME);
+    }
 };
 
 // Every name map carries YOUR NameHasher.
