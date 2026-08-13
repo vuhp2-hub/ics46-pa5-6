@@ -10,8 +10,8 @@
 - [X] Project Setup: Nix Build
 - [X] Setting up CMake + GTest
 ** Part 1 - 1 Days
-- [ ] Setting up Tests
-- [ ] Implementation
+- [X] Setting up Tests
+- [X] Implementation
 ** Part 2 - 1 Days
 - [ ] Setting up Tests
 - [ ] Implementation
