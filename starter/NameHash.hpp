@@ -28,8 +28,18 @@ struct NameHasher {
 
     // Step 1. Turn a name into a number.
     static std::uint32_t hashCode(std::string const& key) {
+        // TODO: Change hashCode string implementation
+        // Saving the original for furture studying:
+        /*
+            std::uint32_t h = 0;
+            for (char c : key) h += static_cast<std::uint32_t>(c);
+         */
+
+        // I'm gonna have to implement using the "scale then add" method discussed in the slides.
         std::uint32_t h = 0;
-        for (char c : key) h += static_cast<std::uint32_t>(c);
+        for (char c : key) {
+            h += (h * 10 + c);
+        }
         return h;
     }
 
