@@ -10,8 +10,8 @@
 - [X] Project Setup: Nix Build
 - [X] Setting up CMake + GTest
 ** Part 1 - 1 Days
-- [ ] Setting up Tests
-- [ ] Implementation
+- [X] Setting up Tests
+- [X] Implementation
 ** Part 2 - 1 Days
 - [ ] Setting up Tests
 - [ ] Implementation
@@ -36,7 +36,7 @@ Must be trivially copiable at most 32 bytes.
 ***** Look Up O(1)
 Try using [[https://google.github.io/benchmark/user_guide.html][Google Benchmark]] for complexity testing. Definitely overkill but it would be fun.
 *** Missing Knowledge List
-**** TODO Scaling Before Adding
+**** DONE Scaling Before Adding
 Described as a technique for hashing strings that eliminates collision for strings that have
 the same characters.
 #+BEGIN_QUOTE
