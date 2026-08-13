@@ -1,3 +1,6 @@
+#include "NameHash.hpp"
 #include <gtest/gtest.h>
 
-TEST(HelloNameHash, Test) { EXPECT_EQ(1, 1); }
+TEST(HelloNameHash, Test) {
+    EXPECT_EQ(1, 1);
+}
