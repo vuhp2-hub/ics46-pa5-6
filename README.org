@@ -55,7 +55,35 @@ The compression function is called MAD (Multiply-Add-Divide)
 MAD relies on 3 constants: positive numbers a and b, and a prime number.
 The assignment requires usage of the constants in [[file:starter/IntegerHash.hpp][IntegerHash.cpp]]
 
-MAD yields your bucket index:
+MAD yields your bucket index (from IntegerHasher):
 #+BEGIN_SRC cpp
-return ((a * hashCode(key) + b) % HASH_PRIME);
+  return static_cast<std::size_t>((mulmod(a, code, HASH_PRIME) + b) % HASH_PRIME);
 #+END_SRC
+** Part 2
+*** What are implementation objectives?
+**** Indexed Heap
+Indexed Heap inside [[file:starter/IndexedMinHeap.hpp][IndexedMinHeap.hpp]] with reference [[file:starter/MinHeap.hpp][MinHeap.hpp]].
+**** Heap Sorting ([[file:starter/BestMeals.hpp][BestMeals.hpp]])
+In this case, each key corresponds to a meal's score.
+
+The program stores in the min-heap the scores of all the meals combination in the odometer pattern.
+
+Heap sort generating a list of the K (or M) best meals in [[file:starter/BestMeals.hpp][BestMeals.hpp]] works because applying heap sort on a min-heap puts key in descending order (highest to lowest).
+***** Odometer Pattern (Depends on [[file:starter/mealScan.hpp][mealScan.hpp]])
+The odometer pattern requires the initiation of the first meal which uses the startingMeal function.
+
+In [[file:starter/BestMeals.hpp][BestMeals.hpp]], the program only uses one stack allocated object whose dish for each course begins from zero to the number of dishes per course. The odometer pattern is advanced with the advanceToNextMeal function.
+**** Meal Tweaking ([[file:starter/MealTweaker.hpp][MealTweaker.hpp]])
+The program can tweak a meal which means setting a different dish for a course. When this process happens, through the model, it is able to get all the tables that contains the meal with MenuModel::tablesWith; this is all that's needed to implement the for-loop's components.
+
+Remember that a pairing factor stores courses and the score of their combination of dishes. MealTweaker stores a vector of scores.
+
+MealTweaker sets the score of a meal as the product of every score combination that matches the dishes described the Meal for every table. The odometer pattern to get that correct score for every table is pretty intricate and it allows for score aggregation from tables that do not include all the courses of meal.
+
+The for-loop inside the tableScoreFor function traverses through the odometer-ordered indices to land on the index of the combination with all the courses, whose dish was set by the meal attached to the MealTweaker, in the scope of the pairing factor/table.
+**** TODO Settling Order, Neighbor ([[file:starter/MenuIndex.hpp][MenuIndex.hpp]])
+MenuIndex.hpp:75 has to be implemented inside the function settlingOrder. Until I understand the surrounding context its purpose, I won't be able to implement the solution.
+*** What is Indexed Heap?
+In the [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, aInstructions.][Instructions PDF]], it's briefly explained as a min-heap with a locator whose purpose is to provide fast access to the "entry's slot": every entry can be refound and re-prioritized quickly by its id. The locator is a unordered map. So overall, the indexed heap is *a heap that's backed by a hashmap* for fast indexing. So searching for example could be O(1).
+
+In the [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, and Ranking Meals.pdf][Instructions Slides]], there's additional visualized explanation regarding this.
