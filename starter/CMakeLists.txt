@@ -8,3 +8,12 @@ gtest_discover_tests(name_hash_gtest)
 
 add_executable(driver driver.cpp)
 install(TARGETS driver RUNTIME DESTINATION bin)
+
+# Address Sanitizers
+set(SANITIZER_FLAGS "-fsanitize=address,undefined")
+set(SANITIZED_TARGETS name_hash_gtest driver)
+
+foreach(target IN LISTS SANITIZED_TARGETS)
+  target_compile_options(${target} PRIVATE ${SANITIZER_FLAGS})
+  target_link_options(${target} PRIVATE ${SANITIZER_FLAGS})
+endforeach()
