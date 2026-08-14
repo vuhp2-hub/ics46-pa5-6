@@ -16,19 +16,21 @@
 
 #include <vector>
 
+#include "IndexedMinHeap.hpp"
 #include "Meal.hpp"
 #include "MenuModel.hpp"
-#include "mealScore.hpp"
 #include "mealScan.hpp"
-#include "IndexedMinHeap.hpp"
+#include "mealScore.hpp"
 
 inline std::vector<Meal> bestMeals(MenuModel const& model, int K, long long M) {
     std::vector<Meal> result;
-    if (K <= 0 || M <= 0) return result;
+    if (K <= 0 || M <= 0)
+        return result;
 
     // The scan is set up for you: `working` is the meal you score, `dish` is its odometer.
     std::vector<int> dish;
     Meal working(model.numCourses());
+
     startingMeal(model, dish, working);
     long long seen = 0;
     do {
@@ -42,4 +44,4 @@ inline std::vector<Meal> bestMeals(MenuModel const& model, int K, long long M) {
     return result;
 }
 
-#endif  // BEST_MEALS_HPP
+#endif // BEST_MEALS_HPP
