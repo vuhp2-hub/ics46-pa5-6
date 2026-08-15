@@ -81,8 +81,8 @@ Remember that a pairing factor stores courses and the score of their combination
 MealTweaker sets the score of a meal as the product of every score combination that matches the dishes described the Meal for every table. The odometer pattern to get that correct score for every table is pretty intricate and it allows for score aggregation from tables that do not include all the courses of meal.
 
 The for-loop inside the tableScoreFor function traverses through the odometer-ordered indices to land on the index of the combination with all the courses, whose dish was set by the meal attached to the MealTweaker, in the scope of the pairing factor/table.
-**** TODO Settling Order, Neighbor ([[file:starter/MenuIndex.hpp][MenuIndex.hpp]])
-MenuIndex.hpp:75 has to be implemented inside the function settlingOrder. Until I understand the surrounding context its purpose, I won't be able to implement the solution.
+**** Settling Order, Neighbor ([[file:starter/MenuIndex.hpp][MenuIndex.hpp]])
+Settling Order is facilitated through another use of the IndexedMinHeap holding the amount of unsettled neighbors as they key.
 *** What is Indexed Heap?
 In the [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, aInstructions.][Instructions PDF]], it's briefly explained as a min-heap with a locator whose purpose is to provide fast access to the "entry's slot": every entry can be refound and re-prioritized quickly by its id. The locator is a unordered map. So overall, the indexed heap is *a heap that's backed by a hashmap* for fast indexing. So searching for example could be O(1).
 
