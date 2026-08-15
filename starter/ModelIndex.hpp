@@ -17,8 +17,9 @@ inline void MenuModel::buildCourseTableIndex() {
         for (int j = 0; j < f.scopeSize(); ++j) {
             // TODO (one line). Record that table t involves course f.courseAt(j): append t to that
             // course's list in _tablesByCourse.
+            _tablesByCourse[f.courseAt(j)].push_back(t);
         }
     }
 }
 
-#endif  // MODEL_INDEX_HPP
+#endif // MODEL_INDEX_HPP
