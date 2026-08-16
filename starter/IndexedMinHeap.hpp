@@ -30,7 +30,7 @@ class IndexedMinHeap {
         // iteration
         while (true) {
             int best = i;
-            for (int c = 2 * i + 1; c <= 2 * i + 2 && c < arraySize; ++c) {
+            for (int c = 2 * i + 1; c <= 2 * i + 2 && c < static_cast<int>(arraySize); ++c) {
                 if (data[c].outranks(data[best])) {
                     best = c;
                 }
@@ -54,7 +54,7 @@ class IndexedMinHeap {
     // pure array work: it knows nothing about the locator. Whoever calls it owns putting the
     // locator right afterward.
     static void heapify(std::vector<HeapEntry>& data) {
-        int arraySize = data.size();
+        size_t arraySize = data.size();
         for (int i = (static_cast<int>(arraySize) - 1) / 2; i >= 0; --i) {
             _percolateDownIn(data, i, arraySize);
         }
@@ -102,8 +102,16 @@ class IndexedMinHeap {
     // these entries, every operation above works as usual, and the locator says where every id
     // ended up.
     void buildFrom(std::vector<HeapEntry> const& entries) {
-        (void)entries;
         // TODO
+        _data = entries;
+        heapify(_data);
+
+        // heapify does not enforce the locator to keep track of all the entries
+        // The code below will update the locator
+        _locator.clear();
+        for (size_t i = 0; i < _data.size(); ++i) {
+            _locator[_data[i].id] = i;
+        }
     }
 };
 

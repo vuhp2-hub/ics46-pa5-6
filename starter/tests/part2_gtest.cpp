@@ -9,7 +9,7 @@
 namespace {
 void fillUnorderedHeapNumTree(std::vector<HeapEntry>& data, std::vector<int> const& entries) {
     for (int entry : entries) {
-        data.push_back(HeapEntry{static_cast<double>(entry), entry});
+        data.push_back(HeapEntry{static_cast<double>(entry), static_cast<long long>(entry)});
     }
 }
 } // namespace
@@ -40,4 +40,19 @@ TEST(IndexedMinHeapTests, Heapify) {
     fillUnorderedHeapNumTree(expected, expected_entries);
 
     EXPECT_EQ(raw, expected);
+}
+
+TEST(IndexedMinHeapTests, HeapifyBuildFromLocator) {
+    // Ensures locator keeps track of all entries
+    // within the buildFrom method
+    std::vector<HeapEntry> raw;
+    std::vector<int> entries{12, 9, 8, 7, 6, 4};
+    fillUnorderedHeapNumTree(raw, entries);
+
+    IndexedMinHeap heap{};
+    heap.buildFrom(raw);
+
+    for (int entry : entries) {
+        EXPECT_TRUE(heap.contains(static_cast<long long>(entry)));
+    }
 }
