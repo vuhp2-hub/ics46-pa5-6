@@ -63,6 +63,38 @@ MAD yields your bucket index (from IntegerHasher):
 *** What are implementation objectives?
 **** Indexed Heap
 Indexed Heap inside [[file:starter/IndexedMinHeap.hpp][IndexedMinHeap.hpp]] with reference [[file:starter/MinHeap.hpp][MinHeap.hpp]].
+***** Heapify
+Heapification includes comparing the new child with its ancestor and moving up at O(N) complexity as every internal node has to be examined until nothing changes. Heapification of a single node that's out-of-place is O(Log N) as we simply compare that new node its parent while disregarding the other child and its sub-branch.
+
+The provided min-heap uses a function titled, "percolateDownIn" as a dependency to the function "heapify".
+
+The function heapify features a for loop that starts at the parent of the child inserted and the index is decremented by one. The function "percolateDownIn" is understood as comparing the parent, the first child, and the second child and swap them if one of the children out-ranks the parent. It stops the heapification process once the parent is not swapped because children are inserted at the leaf and there's a threshold where everything above is already heapified.
+
+In the function "percolateDownIn", there are two cases: one child and two children. A heap tree requires left-to-right filling so to handle the case where there's only one child: making sure that the child index to be less than the size of the tree is sufficient.
+
+The function "heapify" is for sorting an unsorted array and it will take O(N). It's also a static function that can affect an array that it doesn't own.
+
+It begs the question why are there two other functions for percolating down. It seems that one percolate down function is static and the other one is directly for the private member "_data".
+
+The private function that percolates up is for the insertion operation on an already heapified array as using the percolation down function for insertion unnecessarily checks the other already sorted child.
+***** Locator
+Indexed Min-Heap has a locator to make the search operation O(1) through a good hashing method instead of O(N).
+
+#+BEGIN_QUOTE
+Every swap your percolates make must update the locator too
+#+END_QUOTE
+
+It seems that the locator is an std::unordered_map with a standard hashing method so it's not dependent on the other special hashing method at all.
+
+#+BEGIN_SRC cpp
+std::unordered_map<long long, int> _locator;
+#+END_SRC
+
+It looks like the key is the priority and the value is an integer which is the id?
+
+In order to work with the locator, I have to know what the keys and values are.
+On the [[file:instructions/PA 5,6 - Hash Tables & Heaps - Naming, Tweaking, and Ranking Meals.pdf][slides]], it's shown that the locator's key is the id and its value is the slot of where the heap entry is at. So within the percolation operations, I have to interact with the locator to ensure this program invariant.
+
 **** Heap Sorting ([[file:starter/BestMeals.hpp][BestMeals.hpp]])
 In this case, each key corresponds to a meal's score.
 
