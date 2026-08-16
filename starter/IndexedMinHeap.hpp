@@ -21,14 +21,43 @@ class IndexedMinHeap {
     // TODO: private helpers as you see fit (start from MinHeap's _percolateUp/_percolateDown --
     // what extra bookkeeping does every swap now owe?)
 
-    // I guess two percolate up functions is needed because it would simplify one of them internally modifying locator.
+    // I'll just a single percolateDownIn function.
+
+    static void _percolateDownIn(std::vector<HeapEntry>& data, int i, size_t arraySize,
+                                 std::unordered_map<long long, int> *locator = nullptr) {
+        // Percolation down takes O(Log N)
+        // Have to examine all children but will disregard sub-tree of one child every
+        // iteration
+        while (true) {
+            int best = i;
+            for (int c = 2 * i + 1; c <= 2 * i + 2 && c < arraySize; ++c) {
+                if (data[c].outranks(data[best])) {
+                    best = c;
+                }
+            }
+            if (best == i) {
+                break;
+            }
+
+            if (locator != nullptr) {
+                locator->operator[](i) = best;
+                locator->operator[](best) = i;
+            }
+            std::swap(data[i], data[best]);
+            // Percolate down more if needed.
+            i = best;
+        }
+    }
+
   public:
     // Turn ANY array of entries into a heap, in place -- the same job as MinHeap::heapify, and
     // pure array work: it knows nothing about the locator. Whoever calls it owns putting the
     // locator right afterward.
     static void heapify(std::vector<HeapEntry>& data) {
-        (void)data;
-        // TODO
+        int arraySize = data.size();
+        for (int i = (static_cast<int>(arraySize) - 1) / 2; i >= 0; --i) {
+            _percolateDownIn(data, i, arraySize);
+        }
     }
 
     // ---- PROVIDED read-only accessors. They work as soon as YOUR code keeps _data and
