@@ -6,19 +6,22 @@
 #ifndef HEAP_ENTRY_HPP
 #define HEAP_ENTRY_HPP
 
-namespace ics46 { inline long long entryCompareCount = 0; }
+namespace ics46 {
+inline long long entryCompareCount = 0;
+}
 
 struct HeapEntry {
-    double    priority;
+    double priority;
     long long id;
 
     // True when this entry should sit ABOVE other in a MIN-heap
     // (smaller priority wins; equal priorities break ties by smaller id).
     bool outranks(HeapEntry const& other) const {
         ++ics46::entryCompareCount;
-        if (priority != other.priority) return priority < other.priority;
+        if (priority != other.priority)
+            return priority < other.priority;
         return id < other.id;
     }
 };
 
-#endif  // HEAP_ENTRY_HPP
+#endif // HEAP_ENTRY_HPP
