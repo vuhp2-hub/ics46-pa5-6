@@ -40,12 +40,29 @@ class IndexedMinHeap {
             }
 
             if (locator != nullptr) {
-                locator->operator[](i) = best;
-                locator->operator[](best) = i;
+                locator->operator[](data[i].id) = best;
+                locator->operator[](data[best].id) = i;
             }
             std::swap(data[i], data[best]);
             // Percolate down more if needed.
             i = best;
+        }
+    }
+
+    static void _percolateUpIn(std::vector<HeapEntry>& data, int i,
+                               std::unordered_map<long long, int> *locator = nullptr) {
+        while (i > 0) {
+            int parentIndex = (i - 1) / 2;
+            if (data[i].outranks(data[parentIndex])) {
+                if (locator != nullptr) {
+                    locator->operator[](data[i].id) = parentIndex;
+                    locator->operator[](data[parentIndex].id) = i;
+                }
+                std::swap(data[i], data[parentIndex]);
+                i = parentIndex;
+            } else {
+                break;
+            }
         }
     }
 
@@ -82,9 +99,29 @@ class IndexedMinHeap {
     // Add (priority, id). If id is ALREADY in the heap, CHANGE its priority to the given value
     // instead; the entry moves to where it now belongs.
     void insert(double priority, long long id) {
-        (void)priority;
-        (void)id;
         // TODO
+
+        // Two cases: already in the heap and not in the heap
+
+        // If not in the heap: add it in and percolate up
+        // If already in the heap I can compare its new priority to the old priority
+        // Then percolate up or down whether the new priority is less than or greater than the
+        // old priority
+
+        if (contains(id)) {
+            int slot = _locator.at(id);
+            double oldPriority = _data[slot].priority;
+            _data[slot].priority = priority;
+            if (priority > oldPriority) {
+                _percolateDownIn(_data, slot, _data.size(), &_locator);
+            } else {
+                _percolateUpIn(_data, slot, &_locator);
+            }
+
+        } else {
+            _data.push_back(HeapEntry{priority, id});
+            _percolateUpIn(_data, static_cast<int>(_data.size()) - 1, &_locator);
+        }
     }
 
     HeapEntry removeMin() { // throws std::out_of_range if empty
@@ -113,6 +150,22 @@ class IndexedMinHeap {
             _locator[_data[i].id] = i;
         }
     }
+
+#ifdef NOT_GRADESCOPE
+    // Added equivalence operator for testing
+    bool operator==(IndexedMinHeap const& other) const { return other._data == _data && other._locator == _locator; }
+    friend std::ostream& operator<<(std::ostream& out, IndexedMinHeap const& heap) {
+        out << "_data = {";
+
+        for (auto const& entry : heap._data) {
+            out << entry << ", ";
+        }
+
+        out << "}";
+
+        return out;
+    }
+#endif
 };
 
 #endif // INDEXED_MIN_HEAP_HPP

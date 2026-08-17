@@ -17,7 +17,7 @@ install(TARGETS driver RUNTIME DESTINATION bin)
 
 # Address Sanitizers
 set(SANITIZER_FLAGS "-fsanitize=address,undefined")
-set(SANITIZED_TARGETS name_hash_gtest driver)
+set(SANITIZED_TARGETS name_hash_gtest driver part2_gtest)
 
 foreach(target IN LISTS SANITIZED_TARGETS)
   target_compile_options(${target} PRIVATE ${SANITIZER_FLAGS})
