@@ -81,8 +81,7 @@ TEST(IndexedMinHeapTests, NewInsertion) {
     EXPECT_EQ(heap, expected_heap);
 }
 
-TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityHigher) {
-    // New Insertion mainly tests the static helper _percolateUpIn
+TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityLower) {
     // Invariant: buildFrom should be working.
     std::vector<HeapEntry> raw;
     std::vector<int> entries{4, 6, 5, 7, 9, 12, 8};
@@ -97,6 +96,27 @@ TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityHigher) {
     fillUnorderedHeapNumTree(expected_raw, (std::vector<int>{4, 6, 8, 7, 9, 12}));
     // Adding in heap entry id:5 manually for different priority
     expected_raw.push_back(HeapEntry{13, 5});
+
+    IndexedMinHeap expected_heap{};
+    expected_heap.buildFrom(expected_raw);
+
+    EXPECT_EQ(heap, expected_heap);
+}
+
+TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityHigher) {
+    // Invariant: buildFrom should be working.
+    std::vector<HeapEntry> raw;
+    std::vector<int> entries{4, 6, 5, 7, 9, 12, 8};
+    fillUnorderedHeapNumTree(raw, entries);
+
+    IndexedMinHeap heap{};
+    heap.buildFrom(raw);
+
+    heap.insert(1, 5);
+
+    std::vector<HeapEntry> expected_raw;
+    expected_raw.push_back(HeapEntry{1, 5});
+    fillUnorderedHeapNumTree(expected_raw, (std::vector<int>{6, 4, 7, 9, 12, 8}));
 
     IndexedMinHeap expected_heap{};
     expected_heap.buildFrom(expected_raw);
