@@ -125,7 +125,22 @@ class IndexedMinHeap {
     }
 
     HeapEntry removeMin() { // throws std::out_of_range if empty
-        throw std::out_of_range("removeMin: TODO");
+        if (_data.empty()) {
+            throw std::out_of_range("Heap is empty");
+        }
+
+        HeapEntry root = _data[0];
+        _data[0] = _data.back();
+        // Gets rid of actual root.
+        _data.pop_back();
+        _percolateDownIn(_data, 0, _data.size(), &_locator);
+        _locator.erase(root.id);
+
+        if (size() == 1) {
+            _locator[_data[0].id] -= 1;
+        }
+
+        return root;
     }
 
     // Replace the minimum entry with this one (heap must be non-empty).
@@ -161,6 +176,13 @@ class IndexedMinHeap {
             out << entry << ", ";
         }
 
+        out << "}";
+
+        out << "_locator = {";
+
+        for (auto const& [key, value] : heap._locator) {
+            out << "[" << key << "," << value << "]" << ", ";
+        }
         out << "}";
 
         return out;

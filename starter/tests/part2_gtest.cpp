@@ -4,6 +4,7 @@
 #include "MenuModel.hpp"
 #include "ModelIndex.hpp"
 #include <gtest/gtest.h>
+#include <stdexcept>
 #include <vector>
 
 namespace {
@@ -36,8 +37,8 @@ TEST(IndexedMinHeapTests, Heapify) {
     IndexedMinHeap::heapify(raw);
 
     std::vector<HeapEntry> expected;
-    std::vector<int> expected_entries{4, 6, 8, 7, 9, 12};
-    fillUnorderedHeapNumTree(expected, expected_entries);
+    std::vector<int> expectedEntries{4, 6, 8, 7, 9, 12};
+    fillUnorderedHeapNumTree(expected, expectedEntries);
 
     EXPECT_EQ(raw, expected);
 }
@@ -71,14 +72,14 @@ TEST(IndexedMinHeapTests, NewInsertion) {
     heap.insert(5, 5);
     EXPECT_TRUE(heap.contains(5));
 
-    std::vector<HeapEntry> expected_raw;
-    std::vector<int> expected_entries{4, 6, 5, 7, 9, 12, 8};
-    fillUnorderedHeapNumTree(expected_raw, expected_entries);
+    std::vector<HeapEntry> expectedRaw;
+    std::vector<int> expectedEntries{4, 6, 5, 7, 9, 12, 8};
+    fillUnorderedHeapNumTree(expectedRaw, expectedEntries);
 
-    IndexedMinHeap expected_heap{};
-    expected_heap.buildFrom(expected_raw);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expectedRaw);
 
-    EXPECT_EQ(heap, expected_heap);
+    EXPECT_EQ(heap, expectedHeap);
 }
 
 TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityLower) {
@@ -92,15 +93,15 @@ TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityLower) {
 
     heap.insert(13, 5);
 
-    std::vector<HeapEntry> expected_raw;
-    fillUnorderedHeapNumTree(expected_raw, (std::vector<int>{4, 6, 8, 7, 9, 12}));
+    std::vector<HeapEntry> expectedRaw;
+    fillUnorderedHeapNumTree(expectedRaw, (std::vector<int>{4, 6, 8, 7, 9, 12}));
     // Adding in heap entry id:5 manually for different priority
-    expected_raw.push_back(HeapEntry{13, 5});
+    expectedRaw.push_back(HeapEntry{13, 5});
 
-    IndexedMinHeap expected_heap{};
-    expected_heap.buildFrom(expected_raw);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expectedRaw);
 
-    EXPECT_EQ(heap, expected_heap);
+    EXPECT_EQ(heap, expectedHeap);
 }
 
 TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityHigher) {
@@ -114,12 +115,74 @@ TEST(IndexedMinHeapTests, AlreadyExistedInsertionPriorityHigher) {
 
     heap.insert(1, 5);
 
-    std::vector<HeapEntry> expected_raw;
-    expected_raw.push_back(HeapEntry{1, 5});
-    fillUnorderedHeapNumTree(expected_raw, (std::vector<int>{6, 4, 7, 9, 12, 8}));
+    std::vector<HeapEntry> expectedRaw;
+    expectedRaw.push_back(HeapEntry{1, 5});
+    fillUnorderedHeapNumTree(expectedRaw, (std::vector<int>{6, 4, 7, 9, 12, 8}));
 
-    IndexedMinHeap expected_heap{};
-    expected_heap.buildFrom(expected_raw);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expectedRaw);
 
-    EXPECT_EQ(heap, expected_heap);
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, RemoveMinEmpty) {
+    IndexedMinHeap heap{};
+    EXPECT_THROW(heap.removeMin(), std::out_of_range);
+}
+
+TEST(IndexedMinHeapTests, RemoveMinOneItem) {
+    std::vector<HeapEntry> inputs{HeapEntry{1, 1}};
+    IndexedMinHeap heap;
+    heap.buildFrom(inputs);
+    heap.removeMin();
+    EXPECT_EQ(heap, IndexedMinHeap{});
+}
+
+TEST(IndexedMinHeapTests, RemoveMinTwoItems) {
+    std::vector<HeapEntry> inputs{HeapEntry{1, 1}, HeapEntry{2, 2}};
+    IndexedMinHeap heap;
+    heap.buildFrom(inputs);
+    heap.removeMin();
+
+    std::vector<HeapEntry> halfOfInputs{HeapEntry{2, 2}};
+    IndexedMinHeap expectedHeap;
+    expectedHeap.buildFrom(halfOfInputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, RemoveMinLeftReplace) {
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 4, 2, 7, 6, 3, 5};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.removeMin();
+
+    std::vector<HeapEntry> expectedInputs;
+    std::vector<int> expected_entries{2, 4, 3, 7, 6, 5};
+    fillUnorderedHeapNumTree(expectedInputs, expected_entries);
+    IndexedMinHeap expectedHeap;
+    expectedHeap.buildFrom(expectedInputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, RemoveMinRightReplace) {
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 4, 2, 7, 6, 5, 3};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.removeMin();
+
+    std::vector<HeapEntry> expectedInputs;
+    std::vector<int> expected_entries{2, 4, 3, 7, 6, 5};
+    fillUnorderedHeapNumTree(expectedInputs, expected_entries);
+    IndexedMinHeap expectedHeap;
+    expectedHeap.buildFrom(expectedInputs);
+
+    EXPECT_EQ(heap, expectedHeap);
 }
