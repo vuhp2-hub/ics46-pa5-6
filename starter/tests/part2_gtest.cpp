@@ -186,3 +186,171 @@ TEST(IndexedMinHeapTests, RemoveMinRightReplace) {
 
     EXPECT_EQ(heap, expectedHeap);
 }
+
+TEST(IndexedMinHeapTests, ReplaceMin1) {
+    /*
+      Purpose: Right child chosen first, then another percolate-down step
+      Input:     [1, 4, 2, 7, 6, 3, 5]
+      Operation: replaceMin(8)
+      Expected:  [2, 4, 3, 7, 6, 8, 5]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 4, 2, 7, 6, 3, 5};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{8, 8});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{2, 4, 3, 7, 6, 8, 5};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin2) {
+    /*
+      Purpose: Left child chosen first, then another percolate-down step
+      Input:     [1, 2, 4, 5, 3, 6, 7]
+      Operation: replaceMin(8)
+      Expected:  [2, 3, 4, 5, 8, 6, 7]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 2, 4, 5, 3, 6, 7};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{8, 8});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{2, 3, 4, 5, 8, 6, 7};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin3) {
+    /*
+      Purpose: Right child chosen repeatedly while percolating down
+      Input:     [1, 4, 2, 7, 6, 5, 3]
+      Operation: replaceMin(8)
+      Expected:  [2, 4, 3, 7, 6, 5, 8]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 4, 2, 7, 6, 5, 3};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{8, 8});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{2, 4, 3, 7, 6, 5, 8};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin4) {
+    /*
+      Purpose: Small heap with both left and right children
+      Input:     [1, 3, 2]
+      Operation: replaceMin(4)
+      Expected:  [2, 3, 4]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 3, 2};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{4, 4});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{2, 3, 4};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin5) {
+    /*
+      Purpose: Heap with only one child after the root
+      Input:     [1, 2]
+      Operation: replaceMin(5)
+      Expected:  [2, 5]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 2};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{5, 5});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{2, 5};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin6) {
+    /*
+      Purpose: Singleton heap; no percolation possible
+      Input:     [1]
+      Operation: replaceMin(9)
+      Expected:  [9]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{9, 9});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{9};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(IndexedMinHeapTests, ReplaceMin7) {
+    /*
+      Purpose: Replacement already outranks both children; no percolation needed
+      Input:     [1, 4, 2, 7, 6, 3, 5]
+      Operation: replaceMin(0)
+      Expected:  [0, 4, 2, 7, 6, 3, 5]
+    */
+    std::vector<HeapEntry> inputs;
+    std::vector<int> entries{1, 4, 2, 7, 6, 3, 5};
+    fillUnorderedHeapNumTree(inputs, entries);
+    IndexedMinHeap heap{};
+    heap.buildFrom(inputs);
+
+    heap.replaceMin(HeapEntry{0, 0});
+
+    std::vector<HeapEntry> expected_inputs;
+    std::vector<int> expected_entries{0, 4, 2, 7, 6, 3, 5};
+    fillUnorderedHeapNumTree(expected_inputs, expected_entries);
+    IndexedMinHeap expectedHeap{};
+    expectedHeap.buildFrom(expected_inputs);
+
+    EXPECT_EQ(heap, expectedHeap);
+}

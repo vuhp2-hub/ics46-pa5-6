@@ -145,8 +145,15 @@ class IndexedMinHeap {
 
     // Replace the minimum entry with this one (heap must be non-empty).
     void replaceMin(HeapEntry entry) {
-        (void)entry;
         // TODO
+        if (_data.empty()) {
+            throw std::out_of_range("Heap is empty");
+        }
+
+        _locator.erase(_data[0].id);
+        _data[0] = entry;
+        _locator[entry.id] = 0;
+        _percolateDownIn(_data, 0, _data.size(), &_locator);
     }
 
     // Replace the heap's ENTIRE contents with this batch of entries (ids distinct) -- whatever
