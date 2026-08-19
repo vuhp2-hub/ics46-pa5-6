@@ -105,6 +105,8 @@ Heap sort generating a list of the K (or M) best meals in [[file:starter/BestMea
 The odometer pattern requires the initiation of the first meal which uses the startingMeal function.
 
 In [[file:starter/BestMeals.hpp][BestMeals.hpp]], the program only uses one stack allocated object whose dish for each course begins from zero to the number of dishes per course. The odometer pattern is advanced with the advanceToNextMeal function.
+***** Keeping K meals From First M Meals
+So you know how it's a min-heap. We just have to compare with minimum and replace it.
 **** Meal Tweaking ([[file:starter/MealTweaker.hpp][MealTweaker.hpp]])
 The program can tweak a meal which means setting a different dish for a course. When this process happens, through the model, it is able to get all the tables that contains the meal with MenuModel::tablesWith; this is all that's needed to implement the for-loop's components.
 

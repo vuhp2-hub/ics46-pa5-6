@@ -1,8 +1,10 @@
+#include "BestMeals.hpp"
 #include "HeapEntry.hpp"
 #include "IndexedMinHeap.hpp"
 #include "Meal.hpp"
 #include "MenuModel.hpp"
 #include "ModelIndex.hpp"
+#include "mealScore.hpp"
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <vector>
@@ -353,4 +355,21 @@ TEST(IndexedMinHeapTests, ReplaceMin7) {
     expectedHeap.buildFrom(expected_inputs);
 
     EXPECT_EQ(heap, expectedHeap);
+}
+
+TEST(BestMealsTest, AllMHoldK) {
+#ifdef PROJECT_ROOT_DIR
+    std::string projectRoot = TOSTRING(PROJECT_ROOT_DIR);
+    MenuModel menu{projectRoot + "/starter/samples/menu3.menu"};
+    menu.readChosen(projectRoot + "/starter/samples/menu3.chosen");
+
+    // Expected input imported from driver.cpp
+    std::vector<Meal> bestKMeals = bestMeals(menu, 3, 1000000000LL);
+
+    EXPECT_EQ(mealScore(menu, bestKMeals[0]), 36);
+    EXPECT_EQ(mealScore(menu, bestKMeals[1]), 18);
+    EXPECT_EQ(mealScore(menu, bestKMeals[2]), 15);
+#else
+    ADD_FAILURE() << "PROJECT_ROOT_DIR not defined for BestMealsTest/AllMHoldK";
+#endif
 }
