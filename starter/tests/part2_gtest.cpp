@@ -415,3 +415,24 @@ TEST(MealTweakerTests, AlterDish) {
     ADD_FAILURE() << "PROJECT_ROOT_DIR not defined for MealTweakerTests/AlterDish";
 #endif
 }
+
+TEST(SettlingOrderTests, OneLinerChange) {
+#ifdef PROJECT_ROOT_DIR
+    std::string projectRoot = TOSTRING(PROJECT_ROOT_DIR);
+    std::string base = projectRoot + "/starter/samples/menu3";
+    MenuModel menu{base + ".menu"};
+    menu.readChosen(base + ".chosen");
+    MenuNames names(base + ".names");
+
+    std::vector<int> order = settlingOrder(menu);
+    int i = 0;
+    // I/O from driver.cpp
+    std::string expected[] = {"Appetizer", "Main", "Dessert"};
+    for (int c : settlingOrder(menu)) {
+        EXPECT_EQ(expected[i], names.courseName(c));
+        ++i;
+    }
+#else
+    ADD_FAILURE() << "PROJECT_ROOT_DIR not defined for SettlingOrderTests/OneLinerChange";
+#endif
+}
