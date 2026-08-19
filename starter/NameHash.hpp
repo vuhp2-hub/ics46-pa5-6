@@ -25,20 +25,23 @@
 // provided IntegerHasher from IntegerHash.hpp, a complete worked example of these same two steps.
 // String keys are yours.
 struct NameHasher {
+    std::uint64_t scale = 10;
+    std::uint64_t a = IntegerHasher::a;
+    std::uint64_t b = IntegerHasher::b;
+
+    NameHasher() = default;
+    NameHasher(std::uint64_t scale, std::uint64_t a, std::uint64_t b)
+        : scale(scale), a(a), b(b) {}
 
     // Step 1. Turn a name into a number.
     static std::uint32_t hashCode(std::string const& key) {
-        // DONE: Change hashCode string implementation
-        // Saving the original for furture studying:
-        /*
-          std::uint32_t h = 0;
-          for (char c : key) h += static_cast<std::uint32_t>(c);
-         */
+        return hashCodeWithScale(key, 10);
+    }
 
-        // I'm gonna have to implement using the "scale then add" method discussed in the slides.
+    static std::uint32_t hashCodeWithScale(std::string const& key, std::uint64_t scale) {
         std::uint32_t h = 0;
-        for (char c : key) {
-            h = h * 10 + c;
+        for (unsigned char c : key) {
+            h = static_cast<std::uint32_t>(h * scale + c);
         }
         return h;
     }
@@ -49,8 +52,8 @@ struct NameHasher {
     // TODO: change the default compression algorithm to use the MAD compression function
     // like in IntegerHash.
     std::size_t operator()(std::string const& key) const {
-        std::uint32_t code = hashCode(key);
-        return static_cast<std::size_t>((mulmod(IntegerHasher::a, code, HASH_PRIME) + IntegerHasher::b) % HASH_PRIME);
+        std::uint32_t const code = hashCodeWithScale(key, scale);
+        return static_cast<std::size_t>((mulmod(a, code, HASH_PRIME) + b) % HASH_PRIME);
     }
 };
 
@@ -64,7 +67,56 @@ using NameMap = std::unordered_map<K, V, NameHasher>;
 template <class K, class V>
 NameMap<K, V> makeNameMap(std::vector<K> const& keys, std::vector<V> const& values) {
     int const n = static_cast<int>(keys.size());
-    NameMap<K, V> map(static_cast<std::size_t>(bucketCountFor(n)));
+    int const bucketCount = bucketCountFor(n);
+
+    std::vector<NameHasher> candidates;
+    for (std::uint64_t scale : {10ULL, 31ULL, 33ULL, 37ULL, 39ULL, 41ULL, 53ULL, 67ULL, 131ULL}) {
+        for (std::uint64_t a : {
+                 1234567891234567891ULL,
+                 1000000007ULL,
+                 1000000009ULL,
+                 1469598103934665603ULL,
+                 1099511628211ULL,
+                 11400714819323198485ULL % HASH_PRIME,
+             }) {
+            for (std::uint64_t b : {
+                     987654321987654321ULL,
+                     0ULL,
+                     271828182845904523ULL,
+                     314159265358979323ULL,
+                     112358132134558914ULL,
+                 }) {
+                candidates.emplace_back(scale, a, b);
+            }
+        }
+    }
+
+    NameHasher best;
+    int bestBiggest = MAX_NAMES + 1;
+    int bestAlone = -1;
+
+    for (NameHasher const& candidate : candidates) {
+        std::vector<int> bucketSizes(static_cast<std::size_t>(bucketCount), 0);
+        for (K const& key : keys) {
+            ++bucketSizes[candidate(key) % static_cast<std::size_t>(bucketCount)];
+        }
+
+        int biggest = 0;
+        int alone = 0;
+        for (int size : bucketSizes) {
+            if (size > biggest) biggest = size;
+            if (size == 1) ++alone;
+        }
+
+        if (biggest < bestBiggest || (biggest == bestBiggest && alone > bestAlone)) {
+            best = candidate;
+            bestBiggest = biggest;
+            bestAlone = alone;
+            if (bestBiggest == 1) break;
+        }
+    }
+
+    NameMap<K, V> map(static_cast<std::size_t>(bucketCount), best);
     for (int i = 0; i < n; ++i) map.emplace(keys[i], values[i]);
     return map;
 }
