@@ -61,12 +61,7 @@ inline std::vector<Meal> bestMeals(MenuModel const& model, int K, long long M) {
       of the array.
       After the element  at the end of the array is swapped, it percolates down.
      */
-
-    int i = K - 1;
-    if (seen < i) {
-        i = seen - 1;
-    }
-
+    int i = heap.size() - 1;
     result.resize(i + 1);
 
     for (; i >= 0; --i) {

@@ -127,7 +127,7 @@ class IndexedMinHeap {
 
     HeapEntry removeMin() { // throws std::out_of_range if empty
         if (_data.empty()) {
-            throw std::out_of_range("Heap is empty");
+            throw std::out_of_range("removeMin: Heap is empty");
         }
 
         HeapEntry root = _data[0];
@@ -148,7 +148,7 @@ class IndexedMinHeap {
     void replaceMin(HeapEntry entry) {
         // TODO
         if (_data.empty()) {
-            throw std::out_of_range("Heap is empty");
+            throw std::out_of_range("replaceMin: Heap is empty");
         }
 
         _locator.erase(_data[0].id);
