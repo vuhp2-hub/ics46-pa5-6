@@ -2,7 +2,9 @@
 #include "HeapEntry.hpp"
 #include "IndexedMinHeap.hpp"
 #include "Meal.hpp"
+#include "MealTweaker.hpp"
 #include "MenuModel.hpp"
+#include "MenuNames.hpp"
 #include "ModelIndex.hpp"
 #include "mealScore.hpp"
 #include <gtest/gtest.h>
@@ -15,6 +17,10 @@ void fillUnorderedHeapNumTree(std::vector<HeapEntry>& data, std::vector<int> con
         data.push_back(HeapEntry{static_cast<double>(entry), static_cast<long long>(entry)});
     }
 }
+struct Swap {
+    char const *course;
+    char const *dish;
+};
 } // namespace
 
 // Ensure the macro evaluates properly as a string
@@ -371,5 +377,41 @@ TEST(BestMealsTest, AllMHoldK) {
     EXPECT_EQ(mealScore(menu, bestKMeals[2]), 15);
 #else
     ADD_FAILURE() << "PROJECT_ROOT_DIR not defined for BestMealsTest/AllMHoldK";
+#endif
+}
+
+TEST(MealTweakerTests, AlterDish) {
+#ifdef PROJECT_ROOT_DIR
+    std::string projectRoot = TOSTRING(PROJECT_ROOT_DIR);
+    std::string base = projectRoot + "/starter/samples/menu3";
+    MenuModel menu{base + ".menu"};
+    menu.readChosen(base + ".chosen");
+    MenuNames names(base + ".names");
+
+    // I/O expected comes from driver.cpp
+    Meal start(menu.numCourses());
+    for (int c = 0; c < menu.numCourses(); ++c) {
+        start.setDish(c, menu.isChosen(c) ? menu.chosenDish(c) : 0);
+    }
+    MealTweaker tweaker{menu, names, start};
+    Swap const script[] = {{"Appetizer", "Bread"}, {"Main", "Steak"}, {"Dessert", "Fruit"}, {"Appetizer", "Soup"}};
+
+    int i{0};
+    int scoresExpected[] = {6, 6, 18, 15};
+    for (auto const& s : script) {
+        bool const ok = tweaker.alterDish(s.course, s.dish);
+        if (i == 1) {
+            EXPECT_FALSE(ok);
+        } else {
+            EXPECT_TRUE(ok);
+        }
+
+        EXPECT_EQ(tweaker.score(), scoresExpected[i]);
+        ++i;
+    }
+
+    EXPECT_EQ(mealScore(menu, tweaker.currentMeal()), 15);
+#else
+    ADD_FAILURE() << "PROJECT_ROOT_DIR not defined for MealTweakerTests/AlterDish";
 #endif
 }

@@ -56,9 +56,10 @@ class MealTweaker {
         // TODO (one line). Changing course c's dish changes the score of SOME pairing tables and
         // leaves the rest untouched. Refresh exactly the ones it can affect -- the model's
         // tablesWith(c) serves the tables a course appears in -- by re-reading each one:
-        //
-        //     for (int t : /* the tables this change can affect */)
-        //         _tableScore[t] = tableScoreFor(_model, t, _meal);
+        std::vector<int> tablesWithCourse = _model.tablesWith(c);
+        for (int t : tablesWithCourse) {
+            _tableScore[t] = tableScoreFor(_model, t, _meal);
+        }
 
         _recombine(); // rebuilds the total from the cache (a score can be 0, so we
         return true;  // never divide the old contribution back out)
