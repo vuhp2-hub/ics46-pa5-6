@@ -87,6 +87,11 @@ class IndexedMinHeap {
         auto const found = _locator.find(id);
         if (found == _locator.end())
             throw std::out_of_range("priorityOf: id is not in the heap");
+        int dataSize = _data.size();
+        int second = found->second;
+        int first = found->first;
+        std::vector<HeapEntry> logData = _data;
+        std::unordered_map<long long, int> logLocator = _locator;
         return _data[found->second].priority;
     }
 
@@ -119,6 +124,7 @@ class IndexedMinHeap {
             }
 
         } else {
+            _locator[id] = _data.size();
             _data.push_back(HeapEntry{priority, id});
             _percolateUpIn(_data, static_cast<int>(_data.size()) - 1, &_locator);
         }
