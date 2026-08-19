@@ -70,7 +70,10 @@ NameMap<K, V> makeNameMap(std::vector<K> const& keys, std::vector<V> const& valu
     int const bucketCount = bucketCountFor(n);
 
     std::vector<NameHasher> candidates;
-    for (std::uint64_t scale : {10ULL, 31ULL, 33ULL, 37ULL, 39ULL, 41ULL, 53ULL, 67ULL, 131ULL}) {
+    for (std::uint64_t scale : {
+             10ULL, 29ULL, 31ULL, 33ULL, 37ULL, 39ULL,
+             41ULL, 53ULL, 67ULL, 97ULL, 131ULL, 257ULL,
+         }) {
         for (std::uint64_t a : {
                  1234567891234567891ULL,
                  1000000007ULL,
@@ -78,6 +81,9 @@ NameMap<K, V> makeNameMap(std::vector<K> const& keys, std::vector<V> const& valu
                  1469598103934665603ULL,
                  1099511628211ULL,
                  11400714819323198485ULL % HASH_PRIME,
+                 6364136223846793005ULL % HASH_PRIME,
+                 1442695040888963407ULL,
+                 1609587929392839161ULL,
              }) {
             for (std::uint64_t b : {
                      987654321987654321ULL,
@@ -85,6 +91,11 @@ NameMap<K, V> makeNameMap(std::vector<K> const& keys, std::vector<V> const& valu
                      271828182845904523ULL,
                      314159265358979323ULL,
                      112358132134558914ULL,
+                     141421356237309504ULL,
+                     173205080756887729ULL,
+                     223606797749978969ULL,
+                     577215664901532860ULL,
+                     1618033988749894848ULL,
                  }) {
                 candidates.emplace_back(scale, a, b);
             }
